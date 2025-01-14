@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0", 'toml']
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "Atoms_plotter"
+dependencies = [
+  'ase >= 1.0',
+  'matplotlib >= 3.8.4',
+  'natsort >= 8.3.1',
+  'numpy >= 1.24.3',
+]
+version = "1.0"
+authors = [
+  { name="Hendrik Weiske", email="hendrik.weiske@uni-leipzig.de" },
+]
+description = "Package for easy plotting of ASE atoms using matplotlib"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Unix Shell",
+    "License :: OSI Approved :: GPL-3.0 License",
+    "Operating System :: Unix",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+
+[project.scripts]
+plot_atoms = "atoms_plotter.main:main"
+
+[tool.setuptools]
+packages = ["atoms_plotter"]
+package-dir = {'' = 'src'}
+
