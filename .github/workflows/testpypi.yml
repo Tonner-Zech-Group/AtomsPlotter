@@ -1,6 +1,6 @@
 # This workflow will upload a Python Package using Twine when a release is created
 
-name: Upload Python Package
+name: Upload TestPypi Package
 
 on:
   push:
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/tools4vasp
+      url: https://test.pypi.org/p/atoms_plotter
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
