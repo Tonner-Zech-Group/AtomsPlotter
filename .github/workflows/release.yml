@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/atoms_plotter
+      url: https://pypi.org/p/atomsplotter
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
