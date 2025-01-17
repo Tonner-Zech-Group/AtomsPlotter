@@ -15,7 +15,7 @@ Ideally with a development install (-e) so changes are easily updated.
 ### In a python script
 Initialize the class; set options either when initialising or modify class attributes.
 ```python
-from atoms_plotter.atoms_plotter import atoms_plotter
+from AtomsPlotter.atoms_plotter import atoms_plotter
 from ase.io import read
 from sys import argv
 atoms=read(argv[1])
@@ -30,7 +30,7 @@ import ase.io
 import matplotlib.pyplot
 atoms=ase.io.read('CONTCAR')
 %matplotlib widget #for interactive use
-from atoms_plotter.atoms_plotter import atoms_plotter
+from AtomsPlotter.atoms_plotter import atoms_plotter
 
 plotter=atoms_plotter(atoms=atoms, constraints=True)
 plotter.dimension='3D'
