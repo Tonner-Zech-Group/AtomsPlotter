@@ -66,7 +66,7 @@ def main():
     parser.add_argument(
         '--constraints', help='draw constraints', type=str2bool, default=True)
     parser.add_argument(
-        '--rot', help='rotation of the atoms in [x,y,z] direction', default=[0, 0, 0], type=float, nargs=3)
+        '--rot', help='rotation of the atoms in [x,y,z] direction', type=float, nargs=3)
     parser.add_argument(
         '-v', '--view', help="view direction for z-order, use 0,1,2 for x,y,z", default=2, type=int)
     parser.add_argument(
@@ -93,9 +93,11 @@ def main():
                             dimension=a.dimension,
                             view=a.view,
                             )
-    plotter.atoms.rotate(a.rot[0], 'x', rotate_cell=True)
-    plotter.atoms.rotate(a.rot[1], 'y', rotate_cell=True)
-    plotter.atoms.rotate(a.rot[2], 'z', rotate_cell=True)
+    if a.rot:
+        plotter.atoms.wrap(pretty_translation=True)
+        plotter.atoms.rotate(a.rot[0], 'x', center='COM', rotate_cell=True)
+        plotter.atoms.rotate(a.rot[1], 'y', center='COM', rotate_cell=True)
+        plotter.atoms.rotate(a.rot[2], 'z', center='COM', rotate_cell=True)
     if np.any(a.repeat) != 1:
         plotter.atoms = make_supercell(plotter.atoms, [[int(a.repeat[0]), 0, 0], [
                                        0, int(a.repeat[1]), 0], [0, 0, int(a.repeat[2])]])

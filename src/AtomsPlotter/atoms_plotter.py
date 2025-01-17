@@ -358,12 +358,6 @@ class atoms_plotter():
                         xatom2 = [atompos2[0], midb[0]]
                         yatom2 = [atompos2[1], midb[1]]
                         zatom2 = [atompos2[2], midb[2]]
-                        if self.plot_color_gradient is True:
-                            self.plot_colorline(
-                                xatom1, yatom1, xatom2, yatom2, a1, a2)
-                        else:
-                            self.plot_line(
-                                xatom1, yatom1, xatom2, yatom2, a1, a2)
                 if bondorder == 3:
                     b = np.array(bondorderoffset)
                     for sign in [1, 0, -1]:

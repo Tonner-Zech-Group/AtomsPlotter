@@ -27,7 +27,7 @@ classifiers = [
 ]
 
 [project.scripts]
-plot_atoms = "atoms_plotter.main:main"
+plot_atoms = "AtomsPlotter.main:main"
 
 [tool.setuptools]
 packages = ["AtomsPlotter"]
