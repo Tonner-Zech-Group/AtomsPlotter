@@ -26,7 +26,7 @@ jobs:
     steps:
     - uses: lewagon/wait-on-check-action@v1.3.4
       with:
-        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        ref: ${{ github.ref  || github.sha }}
         check-name: 'publish-to-testpypi'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         wait-interval: 20
