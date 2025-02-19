@@ -11,7 +11,7 @@ on:
       logLevel:
         description: 'Log level'
         required: true
-        default: 'warning'
+        default: 'verbose'
       tags:
         description: 'Test Pypi'
 
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/atomsplotter
+      url: https://test.pypi.org/p/AtomsPlotter
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
     steps:
