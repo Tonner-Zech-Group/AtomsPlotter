@@ -16,7 +16,7 @@ class atoms_plotter():
                  view=2,
                  repeat=[1, 1],
                  show_unit_cell=False,
-                 bond_radius=1,
+                 bond_cutoff=1,
                  unit_cell_linestyle='dashed',
                  # I determined this to be a nice size. adjust if necessary.
                  scale=100,
@@ -51,7 +51,7 @@ class atoms_plotter():
         # self.plot_atom_cutoff = plot_atom_cutoff
         # self.plot_atom_colorscaling = plot_atom_colorscaling
         self.show_unit_cell = show_unit_cell
-        self.bond_radius = bond_radius
+        self.bond_cutoff = bond_cutoff
         self.unit_cell_linestyle = unit_cell_linestyle
         # I determined this to be a nice size. adjust if necessary.
         self.scale = scale
@@ -101,7 +101,7 @@ class atoms_plotter():
             self.ATOMS = False
 
     def bonds(self):
-        cutoffs = self.bond_radius * covalent_radii[self.atoms.numbers]
+        cutoffs = self.bond_cutoff * covalent_radii[self.atoms.numbers]
         # ,bothways=True)
         nl = NeighborList(cutoffs=cutoffs, self_interaction=False)
         nl.update(self.atoms)
@@ -317,7 +317,7 @@ class atoms_plotter():
             # self.list_of_atoms+=[a2 for a1,a2,offset,bondorder,bondorderoffset in self.bondatoms]
             if self.draw_outline is True:
                 self.outline = mpe.withStroke(
-                    linewidth=self.outline_width, foreground='black', capstyle='butt')
+                    linewidth=self.outline_width*3, foreground='black', capstyle='butt')
             if self.draw_outline is False:
                 self.outline = None
             if self.colorbonds is False:
@@ -500,8 +500,9 @@ class atoms_plotter():
             self.ax.view_init(elev=self.elev, azim=self.azim)  # 9090
             self.ax.set_axis_off()
             self.ax.set_proj_type(self.projectiontype)
+            aspect=[np.linalg.norm(c) for c in self.atoms.cell]
+            self.ax.set_box_aspect(aspect, zoom=3)
         if self.show is True:
-            plt.savefig(f'{self.name}.{self.format}', transparent=True)
             plt.show()
         else:
             plt.tight_layout()

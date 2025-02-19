@@ -79,7 +79,7 @@ def main():
                             show_unit_cell=a.unitcell,
                             repeat=a.repeat,
                             bondlinewidth=a.bondlinewidth,
-                            bond_radius=a.cutoff_radius,
+                            bond_cutoff=a.cutoff_radius,
                             colorbonds=a.colorbonds,
                             draw_outline=a.outline,
                             constraints=a.constraints,
