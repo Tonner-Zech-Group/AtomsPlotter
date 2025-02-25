@@ -45,6 +45,7 @@ class atoms_plotter():
         self.format = format
         self.atoms = atoms
         self.ATOMS = ATOMS
+
         self.view = view
         self.lewis = lewis
         self.repeat = repeat
@@ -99,7 +100,20 @@ class atoms_plotter():
             self.colorbonds = False
             self.scale = 0.1
             self.ATOMS = False
-
+    def check_pbc(self):
+        if not all(self.atoms.pbc):
+            all_x=[];all_y=[];all_z=[]
+            for x,y,z in self.atoms.get_positions():
+                all_x.append(x);all_y.append(y);all_z.append(z)
+            self.frame_x=[min(all_x)-1,max(all_x)+1]
+            self.frame_y=[min(all_y)-1,max(all_y)+1]
+            self.frame_z=[min(all_z)-1,max(all_z)+1]
+            self.atoms.cell=[[self.frame_x[1]-self.frame_x[0],0,0],
+                             [0,self.frame_y[1]-self.frame_y[0],0],
+                             [0,0,self.frame_z[1]-self.frame_z[0]]]
+            return False
+        else:
+            return True
     def bonds(self):
         cutoffs = self.bond_cutoff * covalent_radii[self.atoms.numbers]
         # ,bothways=True)
@@ -317,7 +331,7 @@ class atoms_plotter():
             # self.list_of_atoms+=[a2 for a1,a2,offset,bondorder,bondorderoffset in self.bondatoms]
             if self.draw_outline is True:
                 self.outline = mpe.withStroke(
-                    linewidth=self.outline_width*3, foreground='black', capstyle='butt')
+                    linewidth=self.outline_width, foreground='black', capstyle='butt')
             if self.draw_outline is False:
                 self.outline = None
             if self.colorbonds is False:
@@ -447,6 +461,11 @@ class atoms_plotter():
         #    mpl.use('TkAgg')
         # else:
         #     mpl.use('pgf')
+        if self.check_pbc():
+            self.frame=[[min(x),max(x)] for x in self.atoms.cell]
+        else:
+            self.frame=[self.frame_x,self.frame_y,self.frame_z]
+
         if self.dimension == '2D':
             self.fig = plt.figure()
             self.ax = plt.gca()
@@ -465,17 +484,17 @@ class atoms_plotter():
                 right=False,         # ticks along the top edge are off
                 labelleft=False)
             plt.axis('off')
-            self.ax.set_xlim(-2, np.linalg.norm(self.atoms.cell[0])+2)
-            self.ax.set_ylim(-2, np.linalg.norm(self.atoms.cell[1])+2)
+            self.ax.set_ylim(self.frame[1][0],self.frame[1][1])
+            self.ax.set_xlim(self.frame[0][0],self.frame[0][1])
             self.plot_atoms_2D()
         else:
             self.fig = plt.figure()
             self.ax = self.fig.add_subplot(
                 111, projection='3d', computed_zorder=False)
             self.ax.set_aspect('equal')
-            self.ax.set_xlim(0, np.linalg.norm(self.atoms.cell[0]))
-            self.ax.set_ylim(0, np.linalg.norm(self.atoms.cell[1]))
-            self.ax.set_zlim(0, np.linalg.norm(self.atoms.cell[2]))
+            self.ax.set_xlim(self.frame[0][0],self.frame[0][1])
+            self.ax.set_ylim(self.frame[1][0],self.frame[1][1])
+            self.ax.set_zlim(self.frame[2][0],self.frame[2][1])
             self.fig.patch.set_facecolor('white')
             plt.tick_params(
                 axis='x',          # changes apply to the x-axis

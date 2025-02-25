@@ -105,11 +105,17 @@ def main():
         plotter.name = a.atoms.split(".")[0]
     else:
         plotter.name = a.name
+    if plotter.check_pbc():
+        scaling = np.linalg.norm(
+            plotter.atoms.cell[0])+np.linalg.norm(plotter.atoms.cell[2])
+    else:
+        scaling = np.linalg.norm(
+            plotter.frame_x)+np.linalg.norm(plotter.frame_z)+np.linalg.norm(plotter.frame_y)
 
-    scaling = (np.linalg.norm(
-        plotter.atoms.cell[0])+np.linalg.norm(plotter.atoms.cell[2]))/3/20
-    plotter.scale = a.scale/scaling/float(a.repeat[0])  # 3D 50
-    plotter.bondlinewidth = 1.5*a.bondlinewidth/scaling/float(a.repeat[0])
+    plotter.scale = a.scale/float(a.repeat[0])*scaling*a.scale  # 3D 50
+    plotter.bondlinewidth = a.bondlinewidth/float(a.repeat[0])*scaling
+    plotter.outline_width = plotter.bondlinewidth*1.5
+    print(scaling)
     if a.no_bondorders is False:
         plotter.use_bondorders = False
     else:
