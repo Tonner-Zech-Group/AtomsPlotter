@@ -58,3 +58,14 @@ plotter.atoms.rotate(90, 'z',rotate_cell=True)
 plotter.view=2
 plotter.plot()
 ```
+
+## Changelog
+
+### 0.3.2
+
+* Fix `plot_atoms_2D` / `plot_atoms_3D` colour assignment: elements
+  missing from `color_dict` (e.g. `Au`, `Pt`) used to inherit the
+  last-iterated atom's jmol colour because `self.COLORS` was rebuilt
+  inside the per-atom loop with the outer-loop atomic number as the
+  fallback. Now built once with a per-atom jmol fallback.
+* Add `Au` (gold) to the default `color_dict`.

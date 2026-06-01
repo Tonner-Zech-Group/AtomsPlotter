@@ -93,7 +93,8 @@ class atoms_plotter():
                            'Cl': (0.50, 1.00, 0.00),
                            'Br': (0.39, 0.15, 0.03),
                            'I': (1.00, 0.00, 1.00),
-                           'Ti': (0.25, 1.75, 0.75)}
+                           'Ti': (0.25, 1.75, 0.75),
+                           'Au': (1.00, 0.84, 0.00)}
         if self.lewis is True:
             self.draw_outline = False
             self.bond_gradient = False
@@ -282,8 +283,6 @@ class atoms_plotter():
         if self.show_unit_cell is True:
             self.ax.plot(self.uXs, self.uYs, linestyle=self.unit_cell_linestyle, lw=self.bondlinewidth/2,
                          color='black', zorder=100, dash_capstyle='round', dash_joinstyle='round')  # zorder=10)
-        self.COLORS = []
-        self.sizes = []
         self.outline_bonds = self.bondlinewidth+self.bondlinewidth/2
         outline_atoms = self.bondlinewidth/5
         self.new_atoms = self.atoms.copy()
@@ -291,25 +290,31 @@ class atoms_plotter():
                                      self.real_space_shift[1], z] for x, y, z in self.atoms.positions]
         Xs = [x for x, y, z in self.new_atoms.positions]
         Ys = [y for x, y, z in self.new_atoms.positions]
-        for n, a in enumerate(self.atoms.get_atomic_numbers()):
-            if self.color_dict is None:
-                colorval = colors.jmol_colors[a]
-                if self.plot_atom_colorscaling is True:
-                    colorval = colorval * \
-                        self.atoms[n].position[-1] / \
-                        (np.linalg.norm(np.amax(self.atoms.positions[:, 2])))
-                self.COLORS.append(colorval)
-            else:
-                self.COLORS = [self.color_dict[s] if s in self.color_dict else colors.jmol_colors[a]
-                               for s in self.atoms.get_chemical_symbols()]
-            if self.lewis is True:
-                self.COLORS = [(0, 0, 0)
-                               for s in self.atoms.get_chemical_symbols()]
-            sizeval = covalent_radii[a]*self.scale  # /np.amax(self.XARRAY)
-            self.sizes.append(sizeval)
+        numbers = self.atoms.get_atomic_numbers()
+        symbols = self.atoms.get_chemical_symbols()
+        # Build COLORS / sizes once. The previous in-loop rebuild used the
+        # outer-loop atomic number as the jmol fallback, so every element
+        # missing from color_dict was painted with the last atom's color.
+        if self.lewis is True:
+            self.COLORS = [(0, 0, 0) for _ in symbols]
+        elif self.color_dict is None:
+            self.COLORS = [colors.jmol_colors[z] for z in numbers]
+            if self.plot_atom_colorscaling is True:
+                z_norm = np.linalg.norm(np.amax(self.atoms.positions[:, 2]))
+                self.COLORS = [
+                    np.asarray(c) * self.atoms[i].position[-1] / z_norm
+                    for i, c in enumerate(self.COLORS)
+                ]
+        else:
+            self.COLORS = [
+                self.color_dict[s] if s in self.color_dict
+                else colors.jmol_colors[numbers[i]]
+                for i, s in enumerate(symbols)
+            ]
+        self.sizes = [covalent_radii[z] * self.scale for z in numbers]
+        for n in range(len(self.atoms)):
             if self.ATOMS is True:
                 if self.draw_outline is True:
-                    # ,zorder=10) #plot the atoms.
                     self.ax.scatter(Xs[n], Ys[n], color=self.COLORS[n], s=self.sizes[n], linewidth=outline_atoms,
                                     zorder=self.atoms.positions[n][self.view]+0.1, edgecolors='black')
                 else:
@@ -420,26 +425,30 @@ class atoms_plotter():
         Xs = [x for x, y, z in self.atoms.positions]
         Ys = [y for x, y, z in self.atoms.positions]
         Zs = [z for x, y, z in self.atoms.positions]
-        self.COLORS = []
-        self.sizes = []
         self.outline_bonds = self.bondlinewidth+2*self.bondlinewidth/5
         outline_atoms = self.bondlinewidth/5
-        for n, a in enumerate(self.atoms.get_atomic_numbers()):
-            if self.color_dict is None:
-                colorval = colors.jmol_colors[a]
-                if self.plot_atom_colorscaling is True:
-                    colorval = colorval * \
-                        self.atoms[n].position[-1] / \
-                        (np.linalg.norm(np.amax(self.atoms.positions[:, 2])))
-                self.COLORS.append(colorval)
-            else:
-                self.COLORS = [self.color_dict[s]
-                               for s in self.atoms.get_chemical_symbols()]
-            if self.lewis is True:
-                self.COLORS = [(0, 0, 0)
-                               for s in self.atoms.get_chemical_symbols()]
-            sizeval = covalent_radii[a]*self.scale  # /np.amax(self.XARRAY)
-            self.sizes.append(sizeval)
+        numbers = self.atoms.get_atomic_numbers()
+        symbols = self.atoms.get_chemical_symbols()
+        # Build COLORS / sizes once with a per-atom jmol fallback so
+        # elements missing from color_dict (e.g. Au, Pt) don't all collapse
+        # onto the last atom's color.
+        if self.lewis is True:
+            self.COLORS = [(0, 0, 0) for _ in symbols]
+        elif self.color_dict is None:
+            self.COLORS = [colors.jmol_colors[z] for z in numbers]
+            if self.plot_atom_colorscaling is True:
+                z_norm = np.linalg.norm(np.amax(self.atoms.positions[:, 2]))
+                self.COLORS = [
+                    np.asarray(c) * self.atoms[i].position[-1] / z_norm
+                    for i, c in enumerate(self.COLORS)
+                ]
+        else:
+            self.COLORS = [
+                self.color_dict[s] if s in self.color_dict
+                else colors.jmol_colors[numbers[i]]
+                for i, s in enumerate(symbols)
+            ]
+        self.sizes = [covalent_radii[z] * self.scale for z in numbers]
 
 #            self.ax.set_xlim([uXs[0],uXs[1]])
 #            self.ax.set_ylim([uYs[0],uYs[2]])
