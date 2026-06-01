@@ -40,6 +40,7 @@ class atoms_plotter():
                  bond_gradient=True,
                  draw_outline=True,
                  projectiontype='ortho',
+                 plot_atom_colorscaling=False,
                  format='svg'):
 
         self.format = format
@@ -49,8 +50,7 @@ class atoms_plotter():
         self.view = view
         self.lewis = lewis
         self.repeat = repeat
-        # self.plot_atom_cutoff = plot_atom_cutoff
-        # self.plot_atom_colorscaling = plot_atom_colorscaling
+        self.plot_atom_colorscaling = plot_atom_colorscaling
         self.show_unit_cell = show_unit_cell
         self.bond_cutoff = bond_cutoff
         self.unit_cell_linestyle = unit_cell_linestyle
@@ -103,15 +103,19 @@ class atoms_plotter():
             self.ATOMS = False
     def check_pbc(self):
         if not all(self.atoms.pbc):
-            all_x=[];all_y=[];all_z=[]
-            for x,y,z in self.atoms.get_positions():
-                all_x.append(x);all_y.append(y);all_z.append(z)
-            self.frame_x=[min(all_x)-1,max(all_x)+1]
-            self.frame_y=[min(all_y)-1,max(all_y)+1]
-            self.frame_z=[min(all_z)-1,max(all_z)+1]
-            self.atoms.cell=[[self.frame_x[1]-self.frame_x[0],0,0],
-                             [0,self.frame_y[1]-self.frame_y[0],0],
-                             [0,0,self.frame_z[1]-self.frame_z[0]]]
+            all_x = []
+            all_y = []
+            all_z = []
+            for x, y, z in self.atoms.get_positions():
+                all_x.append(x)
+                all_y.append(y)
+                all_z.append(z)
+            self.frame_x = [min(all_x) - 1, max(all_x) + 1]
+            self.frame_y = [min(all_y) - 1, max(all_y) + 1]
+            self.frame_z = [min(all_z) - 1, max(all_z) + 1]
+            self.atoms.cell = [[self.frame_x[1] - self.frame_x[0], 0, 0],
+                               [0, self.frame_y[1] - self.frame_y[0], 0],
+                               [0, 0, self.frame_z[1] - self.frame_z[0]]]
             return False
         else:
             return True
@@ -300,11 +304,15 @@ class atoms_plotter():
         elif self.color_dict is None:
             self.COLORS = [colors.jmol_colors[z] for z in numbers]
             if self.plot_atom_colorscaling is True:
+                # Scale each colour by the atom's z fraction. Skip
+                # the scaling for purely flat structures (all z = 0)
+                # to avoid dividing by zero.
                 z_norm = np.linalg.norm(np.amax(self.atoms.positions[:, 2]))
-                self.COLORS = [
-                    np.asarray(c) * self.atoms[i].position[-1] / z_norm
-                    for i, c in enumerate(self.COLORS)
-                ]
+                if z_norm > 0:
+                    self.COLORS = [
+                        np.asarray(c) * self.atoms[i].position[-1] / z_norm
+                        for i, c in enumerate(self.COLORS)
+                    ]
         else:
             self.COLORS = [
                 self.color_dict[s] if s in self.color_dict
@@ -437,11 +445,15 @@ class atoms_plotter():
         elif self.color_dict is None:
             self.COLORS = [colors.jmol_colors[z] for z in numbers]
             if self.plot_atom_colorscaling is True:
+                # Scale each colour by the atom's z fraction. Skip
+                # the scaling for purely flat structures (all z = 0)
+                # to avoid dividing by zero.
                 z_norm = np.linalg.norm(np.amax(self.atoms.positions[:, 2]))
-                self.COLORS = [
-                    np.asarray(c) * self.atoms[i].position[-1] / z_norm
-                    for i, c in enumerate(self.COLORS)
-                ]
+                if z_norm > 0:
+                    self.COLORS = [
+                        np.asarray(c) * self.atoms[i].position[-1] / z_norm
+                        for i, c in enumerate(self.COLORS)
+                    ]
         else:
             self.COLORS = [
                 self.color_dict[s] if s in self.color_dict
