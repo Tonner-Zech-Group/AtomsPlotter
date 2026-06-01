@@ -61,7 +61,7 @@ plotter.plot()
 
 ## Changelog
 
-### 0.3.2
+### 0.3.3
 
 * Fix `plot_atoms_2D` / `plot_atoms_3D` colour assignment: elements
   missing from `color_dict` (e.g. `Au`, `Pt`) used to inherit the
@@ -69,3 +69,14 @@ plotter.plot()
   inside the per-atom loop with the outer-loop atomic number as the
   fallback. Now built once with a per-atom jmol fallback.
 * Add `Au` (gold) to the default `color_dict`.
+* Promote `plot_atom_colorscaling` to a real constructor keyword
+  (`plot_atom_colorscaling=False` by default). Previously it was
+  referenced from both render paths but the `__init__` assignment was
+  commented out, so any code that hit the `color_dict=None` branch
+  raised `AttributeError`.
+* Guard the z-fraction colour scaling against `z_norm == 0` so flat
+  (2-D) structures no longer divide by zero.
+* Tidy four `ruff E702` (semicolon-chained statements) in `check_pbc`.
+
+*(0.3.2 was prepared but never published — its scope is included
+in 0.3.3 above.)*
