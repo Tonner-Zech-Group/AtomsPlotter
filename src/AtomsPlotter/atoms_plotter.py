@@ -291,16 +291,21 @@ class atoms_plotter():
             if isinstance(self.colorbonds, str):
                 self.color1 = np.array([float(self.colorbonds)] * 3)
                 self.color2 = self.color1
+            # the bond fill always projects so segments meet cleanly at
+            # atom centers and at the cell-boundary midpoint
+            self.capstyle = 'projecting'
             for a1, a2, offset, bondorder, bondorderoffset in self.bondatoms:
-                self.capstyle = 'projecting'
+                # only the outline stroke differs: butt caps for in-cell
+                # bonds (no stroke poking past the bond ends), projecting
+                # caps to close the cut edge of boundary-crossing bonds
                 if np.all(offset == 0):
-                    capstyle = 'butt'
+                    outline_capstyle = 'butt'
                 else:
-                    capstyle = 'projecting'
+                    outline_capstyle = 'projecting'
                 if self.draw_outline is True:
                     self.outline = mpe.withStroke(
                         linewidth=self.outline_bonds, foreground='black',
-                        capstyle=capstyle)
+                        capstyle=outline_capstyle)
                 else:
                     self.outline = None
 
