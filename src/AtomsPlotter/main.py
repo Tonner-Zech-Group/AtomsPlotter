@@ -26,7 +26,7 @@ def main():
     parser.add_argument('-b', '--bondlinewidth',
                         help='line width of the bonds (multiplier of the default stick width)', default=1, type=float)
     parser.add_argument(
-        '-B', '--bonds', help='plot the atoms but not the bonds', default=True, type=str2bool)
+        '-B', '--bonds', help='show bonds (set to False to hide)', default=True, type=str2bool)
     parser.add_argument(
         '-u', '--unitcell', help='plot unit cell. Buggy if atoms are rotated', action='store_true')
     parser.add_argument(
