@@ -502,7 +502,7 @@ class atoms_plotter():
         self.atoms = self.atoms.copy()
         try:
             repeat = list(self.repeat) + [1] * (3 - len(self.repeat))
-            if self.atoms.pbc.all() and any(r != 1 for r in repeat):
+            if self.atoms.pbc.any() and any(r != 1 for r in repeat):
                 self.atoms = self.atoms.repeat(
                     tuple(int(r) for r in repeat[:3]))
             orient = self.auto_orient
