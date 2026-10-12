@@ -12,7 +12,7 @@ dependencies = [
 ]
 version = "1.0.1"
 authors = [
-  { name="Hendrik Weiske", email="hendrik.weiske@uni-leipzig.de" },
+  { name="Hendrik Bergner-Weiske", email="hendrik.weiske@uni-leipzig.de" },
 ]
 description = "Package for easy plotting of ASE atoms using matplotlib"
 readme = "README.md"
