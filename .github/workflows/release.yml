@@ -42,12 +42,6 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    - name: Create a Release
-      uses: elgohr/Github-Release-Action@v5
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        title: ${{ github.ref_name }}
 
   publish-to-pypi:
     name: Publish Python distribution to PyPI
@@ -70,4 +64,21 @@ jobs:
       with:
         password: ${{ secrets.PYPI_API_TOKEN }}
 
-
+  github-release:
+    # Publishing the GitHub release also triggers the Zenodo archive (via Zenodo's webhook)
+    name: Create GitHub release
+    needs:
+    - publish-to-pypi
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Create GitHub release for the pushed tag
+      uses: softprops/action-gh-release@v2
+      with:
+        generate_release_notes: true
+        files: dist/*

@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "AtomsPlotter"
+abstract: "Package for plotting ASE atoms-objects using matplotlib. Can be used to create vector graphics, or used interactively in a jupyter-notebook."
+authors:
+- family-names: "Weiske"
+  given-names: "Hendrik"
+  orcid: "https://orcid.org/0000-0002-6141-1749"
+- family-names: "Melix"
+  given-names: "Patrick"
+  orcid: "https://orcid.org/0000-0002-1027-1272"
+license: GPL-3.0-only
+version: "1.0.1"
+date-released: 2026-10-12
+repository-code: "https://github.com/Tonner-Zech-Group/Atoms_plotter"
+url: "https://github.com/Tonner-Zech-Group/Atoms_plotter"
+keywords:
+  - chemistry
+  - ASE
+  - atomic structures
+  - matplotlib
+  - visualization
+  - computational chemistry
