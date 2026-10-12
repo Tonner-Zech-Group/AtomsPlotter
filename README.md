@@ -1,4 +1,7 @@
 # Atoms_plotter
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23316072.svg)](https://doi.org/10.5281/zenodo.23316072)
+
 Package for plotting ASE atoms-objects using matplotlib. Can be used to create vector graphics, or used interactively in a jupyter-notebook.
 
 ## Installation
