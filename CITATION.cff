@@ -9,8 +9,8 @@ authors:
 license: GPL-3.0-only
 version: "1.0.1"
 date-released: 2026-10-12
-repository-code: "https://github.com/Tonner-Zech-Group/Atoms_plotter"
-url: "https://github.com/Tonner-Zech-Group/Atoms_plotter"
+repository-code: "https://github.com/Tonner-Zech-Group/AtomsPlotter"
+url: "https://github.com/Tonner-Zech-Group/AtomsPlotter"
 keywords:
   - chemistry
   - ASE

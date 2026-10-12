@@ -28,7 +28,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with Ruff
       run: |
-        pip install ruff
+        pip install ruff==0.15.15  # ruff 0.17 changed the default rule set
         ruff check --output-format=github .
       continue-on-error: false
     - name: Test with pytest
